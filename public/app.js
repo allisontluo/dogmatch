@@ -1,4 +1,4 @@
-import {dogProfiles} from './profiles.mjs?v=15';
+import {dogProfiles} from './profiles.mjs?v=17';
 import {breeds,defaults,normalizeProfile,needsCarePlan,rankBreeds,restoreState,discoveryQueue,fluffLevels,matchesCoat} from './engine.mjs?v=8';
 const $=id=>document.getElementById(id);
 const key='uxdesign-pawfect-match-v1';

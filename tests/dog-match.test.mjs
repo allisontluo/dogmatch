@@ -107,8 +107,8 @@ test('every dog type has a complete profile without invented owner-provided fact
  const {dogProfiles}=await import('../public/profiles.mjs');
  assert.equal(Object.keys(dogProfiles).length,breeds.length);
  for(const b of breeds){
-  const dog=dogProfiles[b.id];assert(dog&&dog.name,b.id);
-  if(dog.ownerProvided){assert.equal(dog.name,'Winnie');assert.equal(dog.sex,'Female');assert.equal(dog.age,null);assert.equal(dog.likes,'Swimming, boat rides, and walks');}
+  const dog=dogProfiles[b.id];assert(dog&&dog.name,b.id);assert(['Female','Male'].includes(dog.sex));
+  if(dog.ownerProvided){assert.equal(dog.name,'Winnie');assert.equal(dog.sex,'Female');assert.equal(dog.age,5);assert.equal(dog.likes,'Swimming, boat rides, and walks');}
   else {assert(dog.likes);assert(Number.isInteger(dog.age)&&dog.age>0&&dog.age<25);}
  }
  assert.equal(dogProfiles.golden.name,'Ginger');assert.equal(dogProfiles.golden.age,5);
