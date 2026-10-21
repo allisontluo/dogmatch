@@ -76,6 +76,7 @@ form.addEventListener('submit',event=>{event.preventDefault();if(state.step<LAST
 $('metric').addEventListener('change',()=>renderChart());$('only-saved').addEventListener('change',()=>render());
 $('breed-search').addEventListener('input',()=>render());
 $('edit').addEventListener('click',()=>{state.step=0;persist();showStep();$('quiz').scrollIntoView({behavior:'smooth'});form.elements.home.focus({preventScroll:true});});
+$('reset-quiz').addEventListener('click',()=>{$('reset').click();$('quiz').scrollIntoView({behavior:'smooth'});form.elements.home.focus({preventScroll:true});});
 $('reset').addEventListener('click',()=>{try{localStorage.removeItem(key);}catch{}state={version:1,profile:{...defaults},step:0,completed:false,favorites:[],compare:[],history:[]};for(const [name,value] of Object.entries(state.profile))form.elements.namedItem(name).value=value;$('only-saved').checked=false;$('breed-search').value='';$('metric').value='score';showStep();render();$('save-status').textContent='Saved data cleared';toast('Your answers and shortlist have been cleared.');});
 
 // Pointer gestures, keyboard arrows, and buttons all use the same decision handler.
