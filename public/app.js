@@ -13,7 +13,7 @@ function fitChart(score,compact=false) {
  return `<div class="fit-chart ${compact?'compact':''}" style="--fit:${value}%" role="img" aria-label="${value}% profile fit, ${100-value}% difference" title="Profile fit; the pale segment shows differences"><div class="fit-ring"><span>${value}%</span></div>${compact?'':'<small>Profile match</small>'}</div>`;
 }
 const themeButton=$('theme-toggle');
-function refreshTheme(){const dark=document.documentElement.dataset.theme==='dark';themeButton.textContent='🐾';themeButton.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');themeButton.title=dark?'Switch to light mode':'Switch to dark mode';themeButton.setAttribute('aria-pressed',String(dark));}
+function refreshTheme(){const dark=document.documentElement.dataset.theme==='dark';themeButton.textContent=dark?'🐾 Light mode':'🐾 Dark mode';themeButton.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');themeButton.title=dark?'Switch to light mode':'Switch to dark mode';themeButton.setAttribute('aria-pressed',String(dark));}
 themeButton.addEventListener('click',()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;try{localStorage.setItem('uxdesign-pawfect-theme',theme)}catch{}refreshTheme();});
 refreshTheme();
 function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,3500);}
