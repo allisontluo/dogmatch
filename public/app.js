@@ -79,8 +79,10 @@ function renderDiscovery() {
  $('restart-swipes').disabled=state.history.length===0;
  $('like-dog').disabled=!current;$('pass-dog').disabled=!current;
  $('swipe-card').classList.toggle('deck-empty',!current);
+ $('swipe-card').parentElement.classList.toggle('round-complete',!current);
+ $('swipe-card').setAttribute('aria-label',current?'Dog discovery card. Use left arrow to pass or right arrow to like.':'Swipe round complete');
  $('swipe-card').style.transform='';
- if(!current){$('swipe-card').innerHTML=`<div class="deck-finished"><span>✿</span><h3>You’ve met your matching pack.</h3><p>${likes} liked. Find them in My matches, or start a new round.</p><a href="#matches">View your matches ↓</a></div>`;return;}
+ if(!current){$('swipe-card').innerHTML=`<div class="deck-finished"><h3>Round complete</h3><p>You’ve seen all ${eligible.length} dogs for this coat preference.</p><p>${likes?`${likes} dogs liked and saved below.`:"No dogs liked yet. Try another coat preference or start again."}</p><a class="button" href="#matches">View saved dogs ↓</a></div>`;return;}
  const {breed:b,score}=current;
  const dog=dogProfiles[b.id];
  const coat=b.coatLabel||(fluffLevels[b.id]>=2?'Fluffy coat':'Sleek coat');
