@@ -64,7 +64,7 @@ function renderChart(ranked=rankBreeds(state.profile)){
  }).join('');
 
  const metric=$('metric').value;const max={score:100,exercise:150,grooming:3,training:3,fluff:3}[metric];
- $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row"><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=26" alt="${b.name} breed example" width="360" height="280"></div><strong>${b.name}</strong></div>${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
+ $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row"><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=26" alt="${b.name} breed example" width="360" height="280"></div><strong>${dogProfiles[b.id].name}</strong><span class="comparison-breed">${b.name}</span></div>${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
 }
 form.addEventListener('input',updateProfile);
 $('next').addEventListener('click',()=>{state.step=Math.min(LAST_STEP,state.step+1);persist();showStep(true);});
