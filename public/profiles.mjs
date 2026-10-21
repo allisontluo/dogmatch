@@ -1,6 +1,7 @@
 // Fictional example identities, not verified details of the pictured dogs.
 // Recommendation scores still describe the representative breed/type profile.
 export const dogProfiles = {
+ 'long-haired-dachshund':{name:'Link',sex:null,age:null,likes:null,ownerProvided:true},
  havanese:{name:'Coco',sex:'Female',age:4,likes:'Gentle walks and curling up beside you'},
  whippet:{name:'Willow',sex:'Female',age:3,likes:'Zooming in a secure field and sunny naps'},
  labrador:{name:'Milo',sex:'Male',age:4,likes:'Swimming and bringing back a tennis ball'},

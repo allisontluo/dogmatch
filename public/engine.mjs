@@ -1,5 +1,5 @@
 // Values are simplified project estimates for adult dogs, not veterinary advice.
-import {extendedBreeds,householdTraits} from './catalog.mjs?v=8';
+import {extendedBreeds,householdTraits} from './catalog.mjs?v=19';
 export {householdTraits};
 const originalBreeds = [
  {id:'havanese',name:'Havanese',size:'small',exercise:45,training:1,grooming:3,shedding:1,space:1,experience:1,description:'A small, sociable companion with a cheerful outlook.',watch:'A long coat needs consistent grooming; plan for company and coat care.',url:'https://www.akc.org/dog-breeds/havanese/'},

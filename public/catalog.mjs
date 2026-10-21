@@ -1051,3 +1051,7 @@ export const householdTraits = {
     "drool": 1
   }
 };
+
+// Long-haired variety represented by Link's owner-provided photo.
+extendedBreeds.push({...extendedBreeds.find(b=>b.id==='dachshund'),id:'long-haired-dachshund',name:'Long-haired Dachshund',grooming:2,fluff:2,coatLabel:'Long-haired coat',watch:'Discuss back care and safe activity with a vet. Allow time for regular brushing of the long coat.'});
+householdTraits['long-haired-dachshund']={...householdTraits.dachshund};
