@@ -47,7 +47,7 @@ function renderMatchProfiles(ranked) {
  $('matches-shortcut').textContent=liked.length?`View my matches (${liked.length}) ↓`:'View suggested matches ↓';
  $('match-profiles').innerHTML=rows.map(({breed:b,score})=>{
   const dog=dogProfiles[b.id];
-  return `<article class="match-profile" aria-label="${dog.name}, ${b.name} profile"><img class="match-photo" src="photos/${b.id}.jpg?v=26" alt="${dog.name}, ${b.name}" loading="lazy" width="600" height="500"><div class="match-profile-body"><button class="favorite" data-save="${b.id}" aria-label="${state.favorites.includes(b.id)?'Remove':'Save'} ${dog.name}" aria-pressed="${state.favorites.includes(b.id)}">${state.favorites.includes(b.id)?'♥':'♡'}</button>${fitChart(score)}<h3>${dog.name}${dog.age?` <span>age ${dog.age}</span>`:''}</h3><p class="profile-breed">${dog.sex?dog.sex+' · ':''}${b.name}</p>${dog.likes?`<p class="profile-likes"><strong>Loves:</strong> ${dog.likes}.</p>`:''}<details class="profile-details"><summary>About ${dog.name}</summary>${dog.ownerProvided?`<p>${dog.name} is the ${b.name} in the owner-provided photo.</p>`:`<p>${dog.name} is a sample ${dog.age}-year-old ${b.name} who enjoys ${dog.likes.charAt(0).toLowerCase()+dog.likes.slice(1)}.</p>`}<p>${b.description}</p><p><strong>Care:</strong> ${b.watch}</p><a href="${b.url}">Read the dog-type guide ↗</a></details><label class="check-label"><input type="checkbox" data-compare="${b.id}" ${state.compare.includes(b.id)?'checked':''}> Compare ${dog.name}</label></div></article>`;
+  return `<article class="match-profile" aria-label="${dog.name}, ${b.name} profile"><img class="match-photo" src="photos/${b.id}.jpg?v=26" alt="${dog.name}, ${b.name}" loading="lazy" width="600" height="500"><div class="match-profile-body"><button class="favorite" data-save="${b.id}" aria-label="${state.favorites.includes(b.id)?'Remove':'Save'} ${dog.name}" aria-pressed="${state.favorites.includes(b.id)}">${state.favorites.includes(b.id)?'♥':'♡'}</button>${fitChart(score)}<h3>${dog.name}${dog.age?` <span>age ${dog.age}</span>`:''}</h3><p class="profile-breed">${dog.sex?dog.sex+' · ':''}${b.name}</p>${dog.likes?`<p class="profile-likes"><strong>Loves:</strong> ${dog.likes}.</p>`:''}<details class="profile-details"><summary>About ${dog.name}</summary>${dog.ownerProvided?`<p>${dog.name} is the ${b.name} in the owner-provided photo.</p>`:`<p>${dog.name} is a sample ${dog.age}-year-old ${b.name} who enjoys ${dog.likes.charAt(0).toLowerCase()+dog.likes.slice(1)}.</p>`}<p>${b.description}</p><p><strong>Care:</strong> ${b.watch}</p><a href="${b.url}">Read the dog-type guide ↗</a></details><label class="check-label"><input type="checkbox" data-compare="${b.id}" ${state.compare.includes(b.id)?'checked':''}> Compare ${dog.name}</label><button type="button" class="final-choice-button" data-final="${b.id}">Choose as my final dog</button></div></article>`;
  }).join('');
 }
 function renderChart(ranked=rankBreeds(state.profile)){
@@ -64,7 +64,7 @@ function renderChart(ranked=rankBreeds(state.profile)){
  }).join('');
 
  const metric=$('metric').value;const max={score:100,exercise:150,grooming:3,training:3,fluff:3}[metric];
- $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row"><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=26" alt="${b.name} breed example" width="360" height="280"></div><strong>${dogProfiles[b.id].name}</strong><span class="comparison-breed">${b.name}</span></div>${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
+ $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row"><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=26" alt="${b.name} breed example" width="360" height="280"></div><strong>${dogProfiles[b.id].name}</strong><span class="comparison-breed">${b.name}</span><button type="button" class="final-choice-button" data-final="${b.id}">Choose as my final dog</button></div>${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
 }
 form.addEventListener('input',updateProfile);
 $('next').addEventListener('click',()=>{state.step=Math.min(LAST_STEP,state.step+1);persist();showStep(true);});
@@ -122,3 +122,28 @@ $('swipe-card').addEventListener('pointercancel',cancelGesture);
 
 showStep();render();
 if(location.hash==='#discover'&&!state.completed){history.replaceState(null,'','#quiz');$('quiz').scrollIntoView();}
+
+let pendingFinal=null;
+document.addEventListener('click',event=>{
+ const button=event.target.closest('[data-final]');if(!button)return;
+ pendingFinal=button.dataset.final;
+ const dog=dogProfiles[pendingFinal];
+ $('final-heading').textContent=`Choose ${dog.name} as your final dog?`;
+ $('final-description').textContent='Confirm your final pick to celebrate your match.';
+ $('final-photo').src=`photos/${pendingFinal}.jpg?v=26`;
+ $('final-photo').alt=dog.name;
+ $('confirm-final').hidden=false;
+ $('confirm-final').textContent=`Yes, ${dog.name} is my final dog`;
+ $('close-final').textContent='Keep comparing';
+ $('final-confetti').replaceChildren();
+ $('final-dialog').showModal();
+});
+$('close-final').addEventListener('click',()=> $('final-dialog').close());
+$('confirm-final').addEventListener('click',()=>{
+ if(!pendingFinal)return;
+ const dog=dogProfiles[pendingFinal];
+ $('final-heading').textContent=`Your final dog is ${dog.name}!`;
+ $('final-description').textContent='You’ve chosen your match. Time to celebrate!';
+ $('confirm-final').hidden=true;$('close-final').textContent='Back to my dogs';
+ $('final-confetti').innerHTML=Array.from({length:65},(_,i)=>`<i style="--x:${(i*37)%100}%;--delay:${(i%9)*.12}s;--color:${['#719be2','#f2bf65','#e58eac','#75bca8'][i%4]};--turn:${i*53}deg"></i>`).join('');
+});
