@@ -8,7 +8,7 @@ export const dogProfiles = {
  collie:{name:'Finn',age:2,likes:'Agility games and learning new jobs'},
  greyhound:{name:'Olive',age:6,likes:'Leisurely walks and a comfy sofa'},
  samoyed:{name:'Snowy',age:3,likes:'Cool-weather walks and playing with friends'},
- aussiedoodle:{name:'Winnie',sex:'Female',age:null,likes:null,ownerProvided:true},
+ aussiedoodle:{name:'Winnie',sex:'Female',age:null,likes:'Swimming, boat rides, and walks',ownerProvided:true},
  golden:{name:'Ginger',age:5,likes:'Playing fetch and carrying a favorite tennis ball'},
  goldendoodle:{name:'Teddy',age:2,likes:'Garden games and being part of the action'},
  terrier:{name:'Pepper',age:4,likes:'Scent games and chasing a toy'},

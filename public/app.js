@@ -1,4 +1,4 @@
-import {dogProfiles} from './profiles.mjs?v=12';
+import {dogProfiles} from './profiles.mjs?v=15';
 import {breeds,defaults,normalizeProfile,needsCarePlan,rankBreeds,restoreState,discoveryQueue,fluffLevels,matchesCoat} from './engine.mjs?v=8';
 const $=id=>document.getElementById(id);
 const key='uxdesign-pawfect-match-v1';
@@ -86,7 +86,7 @@ function renderDiscovery() {
  const {breed:b,score}=current;
  const dog=dogProfiles[b.id];
  const coat=b.coatLabel||(fluffLevels[b.id]>=2?'Fluffy coat':'Sleek coat');
- $('swipe-card').innerHTML=`<img src="photos/${b.id}.jpg?v=8" alt="${b.name} breed example" draggable="false" width="900" height="650"><div class="swipe-overlay"><span class="swipe-count">${relevant.length+1} / ${eligible.length}</span>${fitChart(score,true)}<h3>${dog.name}${dog.age?`, age ${dog.age}`:''}</h3><p class="swipe-breed">${dog.sex?dog.sex+' · ':''}${b.name}</p>${dog.likes?`<p class="swipe-interest">Loves ${dog.likes.charAt(0).toLowerCase()+dog.likes.slice(1)}</p>`:''}<p>${coat} · ${b.size} · ${b.exercise} min activity target</p></div><span class="sample-chip">${dog.ownerProvided?'Owner-provided name &amp; photo':'Sample profile'}</span><div class="swipe-feedback" aria-hidden="true"></div>`;
+ $('swipe-card').innerHTML=`<img src="photos/${b.id}.jpg?v=8" alt="${b.name} breed example" draggable="false" width="900" height="650"><div class="swipe-overlay"><span class="swipe-count">${relevant.length+1} / ${eligible.length}</span>${fitChart(score,true)}<h3>${dog.name}${dog.age?`, age ${dog.age}`:''}</h3><p class="swipe-breed">${dog.sex?dog.sex+' · ':''}${b.name}</p>${dog.likes?`<p class="swipe-interest">Loves ${dog.likes.charAt(0).toLowerCase()+dog.likes.slice(1)}</p>`:''}<p>${coat} · ${b.size} · ${b.exercise} min activity target</p></div><span class="sample-chip">${dog.ownerProvided?'Owner-provided profile':'Sample profile'}</span><div class="swipe-feedback" aria-hidden="true"></div>`;
 }
 function decide(choice) {
  const current=discoveryQueue(state.profile,state.history)[0];if(!current)return;
