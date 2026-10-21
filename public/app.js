@@ -52,6 +52,17 @@ function renderMatchProfiles(ranked) {
 }
 function renderChart(ranked=rankBreeds(state.profile)){
  $('comparison').hidden=!state.completed||state.compare.length===0;
+ const selected=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).sort((a,b)=>b.score-a.score);
+ $('compare-shortcut').hidden=!state.completed||selected.length<2;
+ $('compare-count').textContent=`(${selected.length})`;
+ const labels={activity:'daily activity time',training:'training time',space:'home space',size:'preferred size',grooming:'grooming commitment',shedding:'shedding preference',experience:'dog-owning experience',coat:'coat preference',children:'household with children',pets:'other pets',barking:'barking preference',social:'social preferences',drool:'drool preference'};
+ $('comparison-reasons').innerHTML=selected.length<2?'<p>Select another dog to see what makes their fit different.</p>':selected.slice(1).map(other=>{
+  const top=selected[0],name=dogProfiles[top.breed.id].name,otherName=dogProfiles[other.breed.id].name;
+  const advantages=Object.keys(labels).filter(k=>top.fit[k]>other.fit[k]).sort((a,b)=>(top.fit[b]-other.fit[b])-(top.fit[a]-other.fit[a])).slice(0,3).map(k=>labels[k]);
+  const tradeoffs=Object.keys(labels).filter(k=>other.fit[k]>top.fit[k]).slice(0,2).map(k=>labels[k]);
+  return `<p><strong>${name} ${top.score===other.score?'ties with':'scores higher than'} ${otherName}${top.score===other.score?` at ${top.score}%`:` by ${top.score-other.score} points`}.</strong> ${advantages.length?`${name} fits your ${advantages.join(', ')} better.`:'Their overall scores are similar across your preferences.'}${tradeoffs.length?` ${otherName} fits your ${tradeoffs.join(' and ')} better.`:''}</p>`;
+ }).join('');
+
  const metric=$('metric').value;const max={score:100,exercise:150,grooming:3,training:3,fluff:3}[metric];
  $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row"><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=8" alt="${b.name} breed example" width="360" height="280"></div><strong>${b.name}</strong></div>${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
 }
