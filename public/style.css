@@ -43,3 +43,17 @@ body,h1,h2,h3{font-family:"Times New Roman",Times,serif}h1,h2,h3{letter-spacing:
 .final-choice-button{display:block;margin-top:18px;padding:12px 18px;background:var(--blue);color:var(--paper);border:0;font:inherit;font-weight:bold}#final-dialog{position:fixed;max-width:900px;width:92vw;max-height:92vh;overflow:auto;border:1px solid var(--line);border-radius:22px;background:var(--paper);color:var(--ink);padding:28px;text-align:center}#final-dialog::backdrop{background:#102039bb}#final-photo{width:100%;height:min(56vh,600px);object-fit:contain;background:var(--soft);border-radius:12px}#final-dialog h2{margin-bottom:12px}.final-dialog-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}.final-dialog-actions button{font:inherit;padding:12px 20px;background:var(--surface);color:var(--ink);border:1px solid var(--line)}#confirm-final{background:var(--blue);color:var(--paper);font-weight:bold}#final-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:22px}#final-confetti i{position:absolute;top:-20px;left:var(--x);width:11px;height:18px;background:var(--color);animation:celebrate 3s var(--delay) ease-in forwards}@keyframes celebrate{to{transform:translateY(100vh) rotate(var(--turn));opacity:0}}@media(prefers-reduced-motion:reduce){#final-confetti i{animation:none;top:12px;transform:rotate(var(--turn))}}
 
 #exercise-value,#alone-value{float:none;display:table;max-width:100%;margin:10px 0 6px;padding:10px 16px;border-radius:12px;border:2px solid var(--blue);background:var(--soft);color:var(--ink);font-size:22px;font-weight:bold;line-height:1.35}
+/* Compact side-by-side comparison cards. */
+#chart{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:18px;align-items:start}
+#chart .chart-row{display:flex;flex-direction:column;gap:8px;margin:0;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;min-width:0;text-align:center}
+#chart .chart-dog{display:contents}
+#chart .chart-photo{order:0;width:100%;height:180px;aspect-ratio:auto;margin:0;background:var(--soft)}
+#chart .chart-photo img{width:100%;height:100%;object-fit:contain}
+#chart .chart-dog>strong{order:1;margin:2px 0 0;font-size:24px}
+#chart .comparison-breed{order:2;font-size:16px}
+#chart .fit-chart{order:3;--ring-size:72px;margin:4px 0}
+#chart .fit-ring span{font-size:20px}
+#chart .final-choice-button{order:5;margin:6px 0 0;font-size:16px;padding:10px 12px;width:100%}
+#chart .track{order:3;width:100%;margin-top:8px}
+#chart .chart-row>span{order:4}
+@media(max-width:620px){#chart{gap:8px;padding:8px;grid-template-columns:repeat(3,minmax(0,1fr))}#chart .chart-row{padding:8px;gap:6px}#chart .chart-photo{height:120px}#chart .chart-dog>strong{font-size:20px}#chart .comparison-breed{font-size:13px;overflow-wrap:anywhere}#chart .final-choice-button{font-size:13px;padding:8px 5px}#chart .fit-chart{--ring-size:60px}#chart .fit-ring span{font-size:17px}#chart .fit-chart small{font-size:11px}}
