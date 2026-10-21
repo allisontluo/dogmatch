@@ -147,3 +147,9 @@ $('confirm-final').addEventListener('click',()=>{
  $('confirm-final').hidden=true;$('close-final').textContent='Back to my dogs';
  $('final-confetti').innerHTML=Array.from({length:65},(_,i)=>`<i style="--x:${(i*37)%100}%;--delay:${(i%9)*.12}s;--color:${['#719be2','#f2bf65','#e58eac','#75bca8'][i%4]};--turn:${i*53}deg"></i>`).join('');
 });
+
+const welcomeBanner=document.querySelector('.welcome-banner');
+let welcomeFrame=false;
+function resizeWelcome(){const expanded=Math.max(440,window.innerHeight*.85);welcomeBanner.style.setProperty('--welcome-height',`${Math.max(320,expanded-window.scrollY*.65)}px`);welcomeFrame=false;}
+window.addEventListener('scroll',()=>{if(!welcomeFrame){welcomeFrame=true;requestAnimationFrame(resizeWelcome);}},{passive:true});
+window.addEventListener('resize',resizeWelcome);resizeWelcome();
