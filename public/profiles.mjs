@@ -16,7 +16,7 @@ export const dogProfiles = {
  beagle:{name:'Biscuit',sex:'Male',age:5,likes:'Sniffing out treats and exploring paths'},
  boxer:{name:'Rocky',sex:'Male',age:3,likes:'Bouncy play sessions and tug toys'},
  dachshund:{name:'Frankie',sex:'Male',age:4,likes:'Sniffing adventures and cozy blankets'},
- chihuahua:{name:'Chico',sex:'Male',age:5,likes:'Short walks and warm laps'},
+ chihuahua:{name:'Mit',sex:'Female',age:null,likes:null,ownerProvided:true},
  'shih-tzu':{name:'Lulu',sex:'Male',age:6,likes:'Gentle play and relaxing near you'},
  maltese:{name:'Pearl',sex:'Male',age:4,likes:'Soft toys and a quiet cuddle'},
  bichon:{name:'Cloud',sex:'Male',age:3,likes:'Learning little tricks and greeting friends'},
