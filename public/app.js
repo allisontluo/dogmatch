@@ -150,6 +150,6 @@ $('confirm-final').addEventListener('click',()=>{
 
 const welcomeBanner=document.querySelector('.welcome-banner');
 let welcomeFrame=false;
-function resizeWelcome(){const expanded=Math.max(440,window.innerHeight*.85);welcomeBanner.style.setProperty('--welcome-height',`${Math.max(320,expanded-window.scrollY*.65)}px`);welcomeFrame=false;}
+function resizeWelcome(){const expanded=window.innerHeight;welcomeBanner.style.setProperty('--welcome-height',`${Math.max(320,expanded-window.scrollY*.65)}px`);document.querySelector('.site-header').style.top=`${Math.max(320,expanded-window.scrollY*.65)}px`;welcomeFrame=false;}
 window.addEventListener('scroll',()=>{if(!welcomeFrame){welcomeFrame=true;requestAnimationFrame(resizeWelcome);}},{passive:true});
 window.addEventListener('resize',resizeWelcome);resizeWelcome();
