@@ -1,0 +1,46 @@
+/* A stronger dog-tag silhouette for the two working panels and their fields. */
+.workspace{gap:28px}
+.workspace>.quiz-card{
+ border:0;border-radius:42px 12px 42px 12px;
+ background:var(--soft);box-shadow:none;
+ padding:26px 30px;overflow:visible;
+}
+.workspace>.quiz-card:before{display:none}
+.workspace>.quiz-card .quiz-top{border:0}
+.workspace>.quiz-card .steps button{background:var(--surface);border:0;box-shadow:none}
+.workspace>.quiz-card .steps .active button{background:var(--blue);color:var(--paper)}
+.workspace>.quiz-card .quiz-progress{background:var(--surface)}
+.workspace>.quiz-card .quiz-progress span{background:var(--blue)}
+.workspace>.quiz-card .form-footer{border:0}
+.workspace>.preview-card{
+ border:0;border-radius:12px 64px 12px 64px;
+ background:var(--blue);color:var(--paper);
+ box-shadow:none;padding:30px;
+}
+.workspace>.preview-card h3,.workspace>.preview-card>.eyebrow,
+.workspace>.preview-card .preview-waiting,.workspace>.preview-card>.hint,
+.workspace>.preview-card .live-copy strong,.workspace>.preview-card .live-copy small{color:var(--paper)}
+.workspace>.preview-card #preview-filter{background:var(--paper);color:var(--ink);border-radius:6px 24px 24px 6px;padding:12px 16px}
+.workspace>.preview-card .preview-pack img{border-color:var(--blue)}
+.workspace>.preview-card .recommendation-photo{background:var(--paper)}
+.workspace>.preview-card .live-row{border-color:color-mix(in srgb,var(--paper) 25%,transparent)}
+.workspace>.preview-card .fit-ring{color:var(--ink)}
+.quiz-card .question-group select{
+ min-height:58px;border:2px solid var(--blue);border-left-width:8px;
+ border-radius:6px 32px 32px 6px;padding:14px 18px;
+ background:var(--surface);color:var(--ink);font-size:18px;
+}
+.quiz-card .question-group select:not(:has(option[value=""]:checked)){background:var(--surface);border-left-color:var(--blue)}
+.quiz-card .question-group select:has(option[value=""]:checked){border-color:var(--line);background:var(--paper)}
+.quiz-card .question-group select:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+.quiz-card #exercise-value,.quiz-card #alone-value{background:var(--surface);border-left-width:8px;border-radius:6px 24px 24px 6px}
+html[data-theme=dark] .workspace>.preview-card{background:var(--soft);color:var(--ink);border:2px solid var(--blue)}
+html[data-theme=dark] .workspace>.quiz-card{background:var(--surface);border:2px solid var(--line)}
+html[data-theme=dark] .workspace>.preview-card h3,html[data-theme=dark] .workspace>.preview-card>.eyebrow,
+html[data-theme=dark] .workspace>.preview-card .preview-waiting,html[data-theme=dark] .workspace>.preview-card>.hint,
+html[data-theme=dark] .workspace>.preview-card .live-copy strong,html[data-theme=dark] .workspace>.preview-card .live-copy small{color:var(--ink)}
+@media(max-width:700px){
+ .workspace>.quiz-card{padding:24px 20px;border-radius:32px 10px 32px 10px}
+ .workspace>.preview-card{padding:26px 22px;border-radius:10px 44px 10px 44px}
+ .quiz-card .question-group select{min-height:56px;padding:12px 12px}
+}
