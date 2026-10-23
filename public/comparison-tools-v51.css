@@ -1,0 +1,20 @@
+.activity-explorer{background:var(--soft);color:var(--ink);padding:18px 22px;border-radius:12px 36px 12px 36px;margin:18px 0}
+.activity-explorer summary{font-size:22px;font-weight:bold;cursor:pointer;min-height:44px;display:list-item;align-content:center}
+.activity-explorer-body{padding:16px 0 4px;max-width:720px}
+.activity-explorer label{display:block;min-width:0;font-size:19px}
+#preview-exercise-value{display:block;font-weight:bold;font-size:22px;margin:10px 0}
+#preview-exercise{width:100%;min-height:44px;accent-color:var(--blue)}
+.activity-explorer .range-labels{display:flex;justify-content:space-between;font-size:14px}
+.activity-explorer p{font-size:17px;line-height:1.5;margin:18px 0}
+.explorer-actions{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.explorer-actions button{min-height:44px}
+.explorer-actions button:disabled{opacity:.5;cursor:default}
+.comparison-order-hint{font-size:17px;line-height:1.5;color:var(--ink);margin:22px 0 14px}
+#chart .comparison-move{order:-1;display:flex;gap:4px;width:100%;align-items:center;flex-wrap:wrap}
+.comparison-move button{font:inherit;font-size:15px;background:var(--soft);color:var(--ink);border:0;border-radius:6px;min-height:44px;min-width:44px;padding:8px;cursor:pointer}
+.comparison-move .drag-compare{flex:1;cursor:grab;touch-action:none;user-select:none}
+.comparison-move .drag-compare:active{cursor:grabbing}
+.comparison-move button:disabled{opacity:.35;cursor:default}
+#chart .drop-target{outline:4px dashed var(--blue);outline-offset:2px}
+#chart .preview-delta{order:4;font-size:16px;line-height:1.4;margin:4px 0;color:var(--ink)}
+@media(max-width:620px){.activity-explorer{padding:18px}.activity-explorer summary{font-size:20px}.comparison-move .drag-compare{flex:1 0 100%}.comparison-move button{flex:1;font-size:14px}.comparison-order-hint{font-size:16px}#chart .preview-delta{font-size:13px}}

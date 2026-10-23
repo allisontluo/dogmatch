@@ -1,3 +1,4 @@
+import {reorderCompared} from './comparison-tools.mjs';
 import {dogProfiles} from './profiles.mjs?v=21';
 import {breeds,defaults,normalizeProfile,needsCarePlan,rankBreeds,restoreState,discoveryQueue,fluffLevels,matchesCoat} from './engine.mjs?v=20';
 const $=id=>document.getElementById(id);
@@ -5,6 +6,7 @@ const key='uxdesign-pawfect-match-v1';
 let state={version:1,profile:{...defaults},step:0,completed:false,favorites:[],compare:[],history:[]};
 let storageOK=true,toastTimer,editing=false;
 let answered=new Set();
+let previewExercise=null;
 try{const saved=localStorage.getItem(key);if(saved){const raw=JSON.parse(saved);state=restoreState(raw);answered=new Set(Array.isArray(raw.answered)?raw.answered:Object.keys(state.profile));}}catch{storageOK=false;$('save-status').textContent='Saved data unavailable · session only';}
 const form=$('match-form');
 const LAST_STEP=document.querySelectorAll('[data-step]').length-1;
@@ -21,7 +23,7 @@ refreshTheme();
 function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,3500);}
 function persist(){try{localStorage.setItem(key,JSON.stringify({...state,answered:[...answered]}));storageOK=true;$('save-status').textContent='Saved on this device';}catch{if(storageOK)toast('Browser storage is unavailable. Your quiz still works for this visit.');storageOK=false;$('save-status').textContent='Session only · storage unavailable';}}
 function showStep(focus=false){document.querySelector('.quiz-card').classList.toggle('editing',editing);$('quiz-progress-fill').style.width=`${(state.step+1)/(LAST_STEP+1)*100}%`;if(editing){document.querySelectorAll('[data-step]').forEach(el=>el.hidden=false);document.querySelector('.steps').hidden=true;$('back').hidden=true;$('next').hidden=true;$('finish').hidden=false;$('finish').textContent='Update recommendations';$('step-label').textContent='Edit any answer';return;}document.querySelector('.steps').hidden=false;$('finish').textContent='Meet my matches →';document.querySelectorAll('[data-step]').forEach(el=>el.hidden=Number(el.dataset.step)!==state.step);document.querySelectorAll('.steps li').forEach((el,i)=>{el.classList.toggle('active',i===state.step);if(i===state.step)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');const button=el.querySelector('button');if(button){if(i===state.step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');}});$('back').hidden=state.step===0;$('next').hidden=state.step===LAST_STEP;$('finish').hidden=state.step!==LAST_STEP;$('step-label').textContent=`Step ${state.step+1} of ${LAST_STEP+1}`;if(focus){document.querySelector(`[data-step="${state.step}"] select, [data-step="${state.step}"] input`).focus({preventScroll:true});document.querySelector('.quiz-card').scrollIntoView({behavior:'instant',block:'start'});}}
-function updateProfile(event){if(event?.target?.name){if(event.target.value!=='')answered.add(event.target.name);else answered.delete(event.target.name);}state.profile=normalizeProfile(Object.fromEntries(new FormData(form)));persist();render();}
+function updateProfile(event){previewExercise=null;if(event?.target?.name){if(event.target.value!=='')answered.add(event.target.name);else answered.delete(event.target.name);}state.profile=normalizeProfile(Object.fromEntries(new FormData(form)));persist();render();}
 function walkTime(minutes){const hours=Math.floor(minutes/60),remainder=minutes%60;return [hours?`${hours} ${hours===1?'hour':'hours'}`:'',remainder||!hours?`${remainder} ${remainder===1?'minute':'minutes'}`:''].filter(Boolean).join(' ');}
 function render(){$('browse-label').textContent=`Browse (${breeds.length} dog types)`;const p=state.profile;const ranked=rankBreeds(p);$('exercise-value').textContent=answered.has('exercise')?`Selected: ${walkTime(p.exercise)}`:'Choose your daily minutes';$('alone-value').textContent=answered.has('alone')?`Selected: ${p.alone} ${p.alone===1?'hour':'hours'} away from home`:'Choose your hours away';form.elements.exercise.setAttribute('aria-valuetext',`${walkTime(p.exercise)} of daily walks and play`);form.elements.alone.setAttribute('aria-valuetext',`${p.alone} hours away from home`);$('care-branch').hidden=!answered.has('alone')||p.alone<=5;
  for(const name of ['exercise','alone']){const input=form.elements[name];const selected=answered.has(name);input.dataset.answered=String(selected);input.style.setProperty('--range-fill',selected?`${(Number(input.value)-Number(input.min))/(Number(input.max)-Number(input.min))*100}%`:'0%');input.setAttribute('aria-valuetext',selected?(name==='exercise'?walkTime(p.exercise):name==='alone'?`${p.alone} hours`:`${p.alone} hours`):'Not selected — move the slider to choose');}
@@ -55,6 +57,15 @@ function renderMatchProfiles(ranked) {
  }).join('');
 }
 function renderChart(ranked=rankBreeds(state.profile)){
+ const baseline=rankBreeds(state.profile);
+ if(previewExercise!==null)ranked=rankBreeds({...state.profile,exercise:previewExercise});
+ const exploring=previewExercise!==null;
+ $('preview-exercise').value=exploring?previewExercise:state.profile.exercise;
+ $('preview-exercise-value').textContent=walkTime(exploring?previewExercise:state.profile.exercise);
+ $('preview-exercise').setAttribute('aria-valuetext',$('preview-exercise-value').textContent);
+ $('apply-exercise').disabled=!exploring;$('reset-exercise').disabled=!exploring;
+ $('preview-note').textContent=exploring?`Preview only: ${walkTime(previewExercise)} daily. Charts and explanations below reflect this preview. Save it with “Use this activity time”.`:'Try a different activity time. Your saved answers stay unchanged.';
+
  $('comparison').hidden=!state.completed||state.compare.length===0;
  const selected=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).sort((a,b)=>b.score-a.score);
  $('compare-shortcut').hidden=!state.completed||selected.length<2;
@@ -68,7 +79,7 @@ function renderChart(ranked=rankBreeds(state.profile)){
  }).join('');
 
  const metric=$('metric').value;const max={score:100,exercise:150,grooming:3,training:3,fluff:3}[metric];
- $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row"><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=31" alt="${b.name} breed example" width="360" height="280"></div><strong>${dogProfiles[b.id].name}</strong><span class="comparison-breed">${b.name}</span><button type="button" class="final-choice-button" data-final="${b.id}">Mark as top pick</button></div>${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
+ $('chart').innerHTML=state.compare.map(id=>ranked.find(x=>x.breed.id===id)).filter(Boolean).map(({breed:b,score})=>{const value=metric==='score'?score:metric==='fluff'?fluffLevels[b.id]:b[metric];const suffix=metric==='score'?'%':metric==='exercise'?' min':' / 3';return `<div class="chart-row" data-compared-id="${b.id}"><div class="comparison-move"><button type="button" class="drag-compare" data-drag-compare="${b.id}" aria-label="Move ${dogProfiles[b.id].name}. Drag to reorder." title="Drag to reorder">⠿ Move</button><button type="button" data-order="${b.id}" data-direction="-1" aria-label="Move ${dogProfiles[b.id].name} earlier" ${state.compare.indexOf(b.id)===0?'disabled':''}>←</button><button type="button" data-order="${b.id}" data-direction="1" aria-label="Move ${dogProfiles[b.id].name} later" ${state.compare.indexOf(b.id)===state.compare.length-1?'disabled':''}>→</button></div><div class="chart-dog"><div class="chart-photo photo-${b.id}"><img src="photos/${b.id}.jpg?v=31" alt="${b.name} breed example" width="360" height="280"></div><strong>${dogProfiles[b.id].name}</strong><span class="comparison-breed">${b.name}</span><button type="button" class="final-choice-button" data-final="${b.id}">Mark as top pick</button></div>${exploring?`<p class="preview-delta">Preview: ${score-baseline.find(row=>row.breed.id===b.id).score>=0?'+':''}${score-baseline.find(row=>row.breed.id===b.id).score} points vs. saved answers</p>`:''}${metric==='score'?fitChart(score):`<div class="track" aria-hidden="true"><div class="bar" style="width:${value/max*100}%"></div></div><span>${value}${suffix}</span>`}</div>`;}).join('');
 }
 form.addEventListener('input',updateProfile);
 // A tap at the current thumb position is also an explicit answer.
@@ -80,13 +91,29 @@ $('back').addEventListener('click',()=>{state.step=Math.max(0,state.step-1);pers
 form.addEventListener('submit',event=>{event.preventDefault();if(!validateAnswers(editing||state.step===LAST_STEP))return;if(editing){editing=false;persist();showStep();render();$('matches').scrollIntoView({behavior:'smooth'});toast('Recommendations updated.');return;}if(state.step<LAST_STEP){state.step++;persist();showStep(true);return;}state.completed=true;persist();render();$('discover').scrollIntoView({behavior:'smooth'});$('discovery-title').tabIndex=-1;$('discovery-title').focus({preventScroll:true});toast('Your matches are ready. Swipe right to like or left to pass.');});
 ['breed-cards','match-profiles'].forEach(container=>$(container).addEventListener('click',event=>{const button=event.target.closest('[data-save]');if(!button)return;const id=button.dataset.save;const saved=state.favorites.includes(id);state.favorites=saved?state.favorites.filter(x=>x!==id):[...state.favorites,id];persist();render();const replacement=document.querySelector(`[data-save="${id}"]`);if(replacement)replacement.focus();else $('only-saved').focus();toast(saved?'Removed from your matches.':'Saved to your matches.');}));
 ['breed-cards','match-profiles'].forEach(container=>$(container).addEventListener('change',event=>{const input=event.target;if(!input.matches('[data-compare]'))return;const id=input.dataset.compare;if(input.checked&&state.compare.length>=3){input.checked=false;toast('Choose up to 3 dogs. Uncheck one before adding another.');return;}state.compare=input.checked?[...state.compare,id]:state.compare.filter(x=>x!==id);document.querySelectorAll(`[data-compare="${id}"]`).forEach(el=>el.checked=input.checked);persist();renderChart();}));
+function moveComparison(source,target){
+ state.compare=reorderCompared(state.compare,source,target);persist();renderChart();
+ document.querySelector(`[data-drag-compare="${source}"]`)?.focus({preventScroll:true});
+ toast(`${dogProfiles[source].name} moved to position ${state.compare.indexOf(source)+1}.`);
+}
+$('chart').addEventListener('click',event=>{const button=event.target.closest('[data-order]');if(!button)return;const source=button.dataset.order,target=state.compare[state.compare.indexOf(source)+Number(button.dataset.direction)];if(target)moveComparison(source,target);});
+let compareDrag=null;
+$('chart').addEventListener('pointerdown',event=>{const handle=event.target.closest('[data-drag-compare]');if(!handle||event.button!==0)return;compareDrag={source:handle.dataset.dragCompare,x:event.clientX,y:event.clientY,pointer:event.pointerId};handle.setPointerCapture(event.pointerId);});
+$('chart').addEventListener('pointermove',event=>{if(!compareDrag||event.pointerId!==compareDrag.pointer)return;const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-compared-id]');document.querySelectorAll('.drop-target').forEach(el=>el.classList.remove('drop-target'));if(target&&target.dataset.comparedId!==compareDrag.source)target.classList.add('drop-target');});
+function cancelCompareDrag(){compareDrag=null;document.querySelectorAll('.drop-target').forEach(el=>el.classList.remove('drop-target'));}
+$('chart').addEventListener('pointerup',event=>{if(!compareDrag)return;const source=compareDrag.source,distance=Math.hypot(event.clientX-compareDrag.x,event.clientY-compareDrag.y);const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-compared-id]')?.dataset.comparedId;cancelCompareDrag();if(distance>16&&target&&source!==target)moveComparison(source,target);});
+$('chart').addEventListener('pointercancel',cancelCompareDrag);
+$('chart').addEventListener('keydown',event=>{if(event.key==='Escape')cancelCompareDrag();});
+$('preview-exercise').addEventListener('input',event=>{previewExercise=Number(event.target.value);renderChart();});
+$('reset-exercise').addEventListener('click',()=>{previewExercise=null;renderChart();toast('Preview reset. Your saved answers are unchanged.');});
+$('apply-exercise').addEventListener('click',()=>{if(previewExercise===null)return;state.profile.exercise=previewExercise;answered.add('exercise');previewExercise=null;fillAnswers();persist();render();toast('Activity time saved. All recommendations updated.');});
 $('metric').addEventListener('change',()=>renderChart());$('only-saved').addEventListener('change',()=>render());
 $('breed-search').addEventListener('input',()=>{render();const searching=$('breed-search').value.trim().length>0;document.querySelector('.all-matches').open=searching;$('browse-label').textContent=searching?'Search results':`Browse (${breeds.length} dog types)`;});
 function editAnswers(){editing=true;showStep();$('quiz').scrollIntoView({behavior:'smooth'});form.elements.home.focus({preventScroll:true});}
 $('edit').addEventListener('click',editAnswers);
 document.addEventListener('click',event=>{const link=event.target.closest('a[href="#quiz"]');if(link&&state.completed&&/edit/i.test(link.textContent)){event.preventDefault();editAnswers();}});
 $('reset-quiz').addEventListener('click',()=>{$('reset').click();$('quiz').scrollIntoView({behavior:'smooth'});form.elements.home.focus({preventScroll:true});});
-$('reset').addEventListener('click',()=>{editing=false;answered.clear();try{localStorage.removeItem(key);}catch{}state={version:1,profile:{...defaults},step:0,completed:false,favorites:[],compare:[],history:[]};fillAnswers();$('only-saved').checked=false;$('breed-search').value='';$('metric').value='score';showStep();render();$('save-status').textContent='Saved data cleared';toast('Your answers and shortlist have been cleared.');});
+$('reset').addEventListener('click',()=>{editing=false;previewExercise=null;answered.clear();try{localStorage.removeItem(key);}catch{}state={version:1,profile:{...defaults},step:0,completed:false,favorites:[],compare:[],history:[]};fillAnswers();$('only-saved').checked=false;$('breed-search').value='';$('metric').value='score';showStep();render();$('save-status').textContent='Saved data cleared';toast('Your answers and shortlist have been cleared.');});
 
 // Pointer gestures, keyboard arrows, and buttons all use the same decision handler.
 function renderDiscovery() {

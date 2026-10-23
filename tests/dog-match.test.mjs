@@ -126,3 +126,21 @@ test('routine values retain exact minutes and extended slider ranges after savin
   assert(rankBreeds(saved.profile).every(row=>Number.isFinite(row.score)&&row.score>=0&&row.score<=100));
  }
 });
+
+test('comparison drag ordering preserves membership, inputs and restored order',async()=>{
+ const {reorderCompared}=await import('../public/comparison-tools.mjs');
+ const before=['corgi','whippet','bulldog'];
+ const after=reorderCompared(before,'corgi','bulldog');
+ assert.deepEqual(after,['whippet','bulldog','corgi']);
+ assert.deepEqual(before,['corgi','whippet','bulldog']);
+ assert.deepEqual(reorderCompared(after,'missing','corgi'),after);
+ assert.deepEqual(restoreState({version:1,profile:defaults,compare:after}).compare,after);
+});
+test('activity scenario calculations leave the saved profile untouched',()=>{
+ const saved={...defaults,exercise:79,support:'yes'};
+ const baseline=rankBreeds(saved);
+ const preview=rankBreeds({...saved,exercise:0});
+ assert.equal(saved.exercise,79);
+ assert(preview.some(row=>row.score!==baseline.find(old=>old.breed.id===row.breed.id).score));
+ assert.deepEqual(rankBreeds(saved),baseline);
+});
