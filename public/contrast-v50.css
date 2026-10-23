@@ -1,0 +1,24 @@
+/* Keep the stronger silhouettes in the original light palette. */
+.workspace>.quiz-card,.workspace>.preview-card{
+ background:var(--surface);color:var(--ink);
+ border:1px solid var(--line);box-shadow:none;
+}
+.workspace>.preview-card h3,.workspace>.preview-card>.eyebrow,
+.workspace>.preview-card .preview-waiting,.workspace>.preview-card>.hint,
+.workspace>.preview-card .live-copy strong,.workspace>.preview-card .live-copy small,
+.workspace>.quiz-card .field-intro,.workspace>.quiz-card .hint,
+.workspace>.quiz-card .range-labels,.workspace>.quiz-card #save-status{color:var(--ink)}
+.workspace>.preview-card #preview-filter{background:var(--soft);color:var(--ink)}
+.workspace>.preview-card .preview-pack img{border-color:var(--surface)}
+.workspace>.preview-card .recommendation-photo{background:var(--soft)}
+.workspace>.preview-card .live-row{border-color:var(--line)}
+.quiz-card .question-group select:not(:has(option[value=""]:checked)){background:var(--soft);color:var(--ink)}
+.quiz-card .question-group select:has(option[value=""]:checked){background:var(--paper);color:var(--ink)}
+.quiz-card #exercise-value,.quiz-card #alone-value{background:var(--soft);color:var(--ink)}
+html[data-theme=dark] .workspace>.quiz-card,html[data-theme=dark] .workspace>.preview-card{
+ background:var(--surface);color:var(--ink);border:1px solid var(--line);
+}
+.workspace>.quiz-card .steps button{background:var(--paper);border:1px solid var(--line)}
+.workspace>.quiz-card .steps .active button{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.workspace>.quiz-card .quiz-progress{background:var(--soft)}
+.workspace>.quiz-card .quiz-progress span{background:#d7a571}
