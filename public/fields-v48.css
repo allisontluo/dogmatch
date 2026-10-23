@@ -1,0 +1,37 @@
+/* Pawfect Match: answer fields borrow the silhouette of a rounded dog tag.
+   Native selects retain keyboard controls, screen-reader labels and device menus. */
+.quiz-card .question-group select{
+ appearance:auto;
+ width:100%;max-width:100%;min-height:52px;
+ padding:12px 20px 12px 18px;
+ border:1px solid var(--line);border-left:4px solid var(--line);
+ border-radius:8px 30px 30px 8px;
+ background:var(--paper);color:var(--ink);
+ font-family:inherit;font-size:18px;line-height:1.4;
+ box-shadow:none;cursor:pointer;
+}
+.quiz-card .question-group select:not(:has(option[value=""]:checked)){
+ border-left-color:var(--blue);background:var(--soft);font-weight:bold;
+}
+.quiz-card .question-group select:has(option[value=""]:checked){color:var(--muted)}
+.quiz-card .question-group select:hover{border-color:var(--blue)}
+.quiz-card .question-group select:focus-visible{
+ outline:3px solid var(--blue);outline-offset:4px;
+ border-color:var(--blue);box-shadow:none;
+}
+.quiz-card .question-group select option{font-weight:normal;background:var(--paper);color:var(--ink)}
+/* The slider readouts use the same silhouette without looking editable. */
+.quiz-card #exercise-value,.quiz-card #alone-value{
+ border:0;border-left:4px solid var(--blue);
+ border-radius:6px 24px 24px 6px;
+ padding:8px 16px 8px 12px;
+ background:var(--soft);color:var(--ink);
+}
+@media(max-width:700px){
+ .quiz-card .question-group select{min-height:52px;padding-right:14px;font-size:18px}
+}
+@media(forced-colors:active){
+ .quiz-card .question-group select{border-color:ButtonText}
+ .quiz-card .question-group select:focus-visible{outline-color:Highlight}
+ .quiz-card .question-group select:not(:has(option[value=""]:checked)){border-left-color:Highlight}
+}
