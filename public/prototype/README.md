@@ -1,6 +1,6 @@
-# DogMatch: screen-based prototype
+# Pawfect Match: screen-based prototype
 
-A separate, interactive proposal. The existing DogMatch homepage is preserved.
+A separate, interactive proposal. The existing Pawfect Match homepage is preserved.
 
 - Welcome: immersive dog collage and a clear start action.
 - Questionnaire: four directly accessible chapters, blank first-run choices, compact fields, and an adjacent recommendation preview.
