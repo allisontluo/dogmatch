@@ -21,7 +21,7 @@ export function normalizeProfile(raw={}) {
  if(!raw || typeof raw!=="object") raw={};
  const p={...defaults};
  for(const [key,values] of Object.entries(choices)) if(values.includes(raw[key])) p[key]=raw[key];
- for(const [key,min,max,step] of [['exercise',15,150,15],['alone',0,10,1],['training',1,3,1],['grooming',1,3,1]]) {
+ for(const [key,min,max,step] of [['exercise',0,240,1],['alone',0,24,.5],['training',1,3,1],['grooming',1,3,1]]) {
   const n=Number(raw[key]); if(raw[key]!==undefined&&Number.isFinite(n)&&n>=min&&n<=max&&n%step===0) p[key]=n;
  }
  return p;

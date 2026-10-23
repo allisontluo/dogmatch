@@ -1,0 +1,8 @@
+/* Clear values above touch-friendly routine controls. */
+[data-step="1"] input[type=range]{display:block;width:100%;height:44px;min-height:44px;margin:8px 0 0;padding:0;cursor:pointer;accent-color:var(--blue,#395e9f);background:transparent;border:0;box-shadow:none}
+[data-step="1"] input[type=range][data-answered=false]{opacity:.55}
+[data-step="1"] input[type=range]:focus-visible{outline:3px solid var(--blue,#395e9f);outline-offset:4px;border-radius:8px}
+[data-step="1"] .range-labels{display:flex;justify-content:space-between;gap:16px;margin-top:0;font-size:14px;line-height:1.4}
+[data-step="1"] .range-labels span:last-child{text-align:right}
+[data-step="1"] output{min-height:34px}
+.quiz-card #training-value,.quiz-card #support-value{float:none;display:table;max-width:100%;font-size:18px;font-weight:bold;line-height:1.35;padding:6px 10px;margin:8px 0;border:1px solid var(--blue);border-radius:12px;background:var(--soft);color:var(--ink)}

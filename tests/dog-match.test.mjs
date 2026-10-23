@@ -115,3 +115,14 @@ test('every dog type has a complete profile without invented owner-provided fact
  assert.equal(dogProfiles.golden.name,'Ginger');assert.equal(dogProfiles.golden.age,5);
  assert(dogProfiles.golden.likes.toLowerCase().includes('fetch'));
 });
+
+test('routine values retain exact minutes and extended slider ranges after saving',()=>{
+ for(const exercise of [0,40,121,180,240]){
+  const profile={...defaults,exercise,alone:12.5};
+  assert.equal(normalizeProfile(profile).exercise,exercise);
+  const saved=restoreState({version:1,profile,favorites:[],compare:[],history:[]});
+  assert.equal(saved.profile.exercise,exercise);
+  assert.equal(saved.profile.alone,12.5);
+  assert(rankBreeds(saved.profile).every(row=>Number.isFinite(row.score)&&row.score>=0&&row.score<=100));
+ }
+});
