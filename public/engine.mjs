@@ -91,3 +91,9 @@ export function discoveryQueue(profile,history=[]) {
   return {...row,discoveryScore};
  }).sort((a,b)=>b.discoveryScore-a.discoveryScore||a.breed.name.localeCompare(b.breed.name));
 }
+
+// A short adaptive round; the full catalog and general ranking stay available.
+export function discoveryRound(profile,history=[],limit=10){
+ const completed=normalizeHistory(history).filter(d=>matchesCoat(breeds.find(b=>b.id===d.id),profile)).length;
+ return discoveryQueue(profile,history).slice(0,Math.max(0,limit-completed));
+}

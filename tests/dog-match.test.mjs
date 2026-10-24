@@ -145,3 +145,18 @@ test('activity scenario calculations leave the saved profile untouched',()=>{
  assert(preview.some(row=>row.score!==baseline.find(old=>old.breed.id===row.breed.id).score));
  assert.deepEqual(rankBreeds(saved),baseline);
 });
+
+test('short discovery rounds end after ten choices while the full catalog stays available',async()=>{
+ const {discoveryRound,fluffLevels}=await import('../public/engine.mjs');
+ const p={...defaults,fluff:'fluffy'},history=[];
+ while(discoveryRound(p,history).length){
+  const row=discoveryRound(p,history)[0];
+  assert(fluffLevels[row.breed.id]>=2);
+  history.push({id:row.breed.id,choice:'like'});
+  assert(history.length<=10);
+ }
+ assert.equal(history.length,10);
+ assert.equal(discoveryRound(p,history).length,0);
+ assert(rankBreeds(p).length>10);
+ assert.equal(discoveryRound(p,[]).length,10);
+});

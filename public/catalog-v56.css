@@ -1,0 +1,16 @@
+.breed-card{display:flex;flex-direction:column;align-items:stretch}
+.breed-card>.favorite{align-self:flex-end}
+.breed-card>h3{min-height:2.4em;line-height:1.2;margin-bottom:8px}
+.breed-card .catalog-identity{min-height:2.8em;line-height:1.4;margin:0 0 14px;color:var(--ink);font-size:17px}
+.breed-card>.tags{text-transform:none;letter-spacing:0;line-height:1.5;min-height:3em}
+.breed-card h4{font-size:18px;color:var(--ink);margin:20px 0 8px}
+.breed-card .catalog-description,.breed-card .catalog-care{font-size:17px;line-height:1.5;color:var(--ink);margin:0}
+.breed-card .catalog-description{min-height:4.5em}
+.breed-card .catalog-fit{padding-left:20px;margin:0;font-size:16px;line-height:1.5;color:var(--ink)}
+.catalog-fit li{margin:6px 0}
+.catalog-considerations{margin:14px 0 0;font-size:16px;line-height:1.5;color:var(--ink)}
+.catalog-considerations summary{cursor:pointer;min-height:44px;align-content:center}
+.breed-card .catalog-considerations ul{font-size:16px;color:var(--ink)}
+.breed-card .catalog-guide{font-size:17px;margin:20px 0}
+.breed-card>.check-label{margin-top:auto;padding-top:14px;min-height:44px}
+@media(max-width:700px){.breed-card>h3,.breed-card .catalog-identity,.breed-card>.tags,.breed-card .catalog-description{min-height:0}}
