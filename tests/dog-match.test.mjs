@@ -109,6 +109,7 @@ test('every dog type has a complete profile without invented owner-provided fact
  for(const b of breeds){
   const dog=dogProfiles[b.id];assert(dog&&dog.name,b.id);assert(dog.sex===null||['Female','Male'].includes(dog.sex));
   if(dog.name==='Link'||dog.name==='Mit'){assert.equal(dog.age,null);assert.equal(dog.likes,null);}
+  else if(dog.name==='Monty'){assert.equal(dog.sex,'Male');assert.equal(dog.age,6);assert.equal(dog.likes,null);assert.equal(dog.ownerProvided,true);}
   else if(dog.ownerProvided){assert.equal(dog.name,'Winnie');assert.equal(dog.sex,'Female');assert.equal(dog.age,5);assert.equal(dog.likes,'Swimming, boat rides, and walks');}
   else {assert(dog.likes);assert(Number.isInteger(dog.age)&&dog.age>0&&dog.age<25);}
  }

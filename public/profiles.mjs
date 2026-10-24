@@ -11,7 +11,7 @@ export const dogProfiles = {
  samoyed:{name:'Snowy',sex:'Female',age:3,likes:'Cool-weather walks and playing with friends'},
  aussiedoodle:{name:'Winnie',sex:'Female',age:5,likes:'Swimming, boat rides, and walks',ownerProvided:true},
  golden:{name:'Ginger',sex:'Female',age:5,likes:'Playing fetch and carrying a favorite tennis ball'},
- goldendoodle:{name:'Teddy',sex:'Male',age:2,likes:'Garden games and being part of the action'},
+ goldendoodle:{name:'Monty',sex:'Male',age:6,likes:null,ownerProvided:true},
  terrier:{name:'Pepper',sex:'Female',age:4,likes:'Scent games and chasing a toy'},
  beagle:{name:'Biscuit',sex:'Male',age:5,likes:'Sniffing out treats and exploring paths'},
  boxer:{name:'Rocky',sex:'Male',age:3,likes:'Bouncy play sessions and tug toys'},
