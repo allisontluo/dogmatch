@@ -13,7 +13,7 @@ Open http://localhost:8094/. Use HTTP for native JavaScript modules. There is no
 
 ## Experience
 
-- Fullscreen welcome with six dog portraits and Start matching.
+- Original fullscreen dog-collage welcome with Start matching.
 - One question at a time, four clickable chapters, no preselected answers, and a review screen for direct editing.
 - Activity (0–4 hours) and hours away sliders, readable hours/minutes, training and care-plan dropdowns. Care support appears after an answer above five hours away.
 - Recommended, Favorites and the complete 52-type Browse catalog with immediate name/type search. Match scores appear after finishing the questionnaire.
