@@ -7,6 +7,11 @@ const knownIds=new Set(breeds.map(dog=>dog.id));
 const questionIds=new Set(questions.map(question=>question.id));
 export const freshExperience=()=>({version:1,profile:{...defaults},step:0,completed:false,favorites:[],compare:[],history:[],answered:[],question:'home',topPick:null});
 
+// A new questionnaire starts a fresh swipe round without losing saved dogs.
+export function resetQuestionnaire(state){
+ return {...freshExperience(),favorites:[...state.favorites],compare:[...state.compare],topPick:state.topPick};
+}
+
 export function restoreExperience(raw,{legacy=false}={}){
  const restored=restoreState(raw);
  const answered=[...new Set((Array.isArray(raw.answered)?raw.answered:legacy?Object.keys(raw.profile||{}):[]).filter(id=>questionIds.has(id)))];

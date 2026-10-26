@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {freshExperience,loadSavedExperience,mainStateKey,mainPreferenceKey,restoreExperience} from '../public/experience-state.mjs';
+import {freshExperience,loadSavedExperience,mainStateKey,mainPreferenceKey,restoreExperience,resetQuestionnaire} from '../public/experience-state.mjs';
 import {questions} from '../public/questions.mjs';
 const store=records=>({getItem:key=>records[key]===undefined?null:typeof records[key]==='string'?records[key]:JSON.stringify(records[key])});
 const complete=changes=>({...freshExperience(),completed:true,answered:questions.map(q=>q.id),...changes});
@@ -31,4 +31,13 @@ test('legacy records without answered metadata retain actual saved inputs',()=>{
 test('corrupt storage falls back safely and blocked storage stays usable for the visit',()=>{
  const valid=complete({favorites:['beagle']});assert.equal(loadSavedExperience(store({[mainStateKey]:'bad json','uxdesign-pawfect-match-v1':valid})).state.completed,true);
  const loaded=loadSavedExperience({getItem(){throw new Error('blocked');}});assert.equal(loaded.storageOK,false);assert.deepEqual(loaded.state.answered,[]);
+});
+
+test('resetting answers preserves saved dogs and persists without re-importing old answers',()=>{
+ const original=complete({profile:{...freshExperience().profile,exercise:180,alone:8,support:'yes'},favorites:['aussiedoodle','goldendoodle'],compare:['goldendoodle','aussiedoodle'],topPick:'aussiedoodle',question:'drool',step:3,history:[{id:'golden',choice:'pass',wasSaved:false}]});
+ const before=JSON.stringify(original),reset=resetQuestionnaire(original);
+ assert.deepEqual(reset.profile,freshExperience().profile);assert.deepEqual(reset.answered,[]);assert.equal(reset.completed,false);assert.equal(reset.question,'home');assert.equal(reset.step,0);assert.deepEqual(reset.history,[]);
+ assert.deepEqual(reset.favorites,original.favorites);assert.deepEqual(reset.compare,original.compare);assert.equal(reset.topPick,original.topPick);assert.notEqual(reset.favorites,original.favorites);assert.equal(JSON.stringify(original),before);
+ const restored=loadSavedExperience(store({[mainStateKey]:reset,'pawfect-prototype-v2':original,[mainPreferenceKey]:{size:130,motion:true,theme:'dark'}}));
+ assert.equal(restored.source,'main');assert.deepEqual(restored.state.answered,[]);assert.deepEqual(restored.state.favorites,original.favorites);assert.equal(restored.state.completed,false);assert.deepEqual(restored.preferences,{size:130,motion:true,theme:'dark'});
 });
