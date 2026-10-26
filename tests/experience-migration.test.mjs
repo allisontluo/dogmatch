@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {freshExperience,loadSavedExperience,mainStateKey,mainPreferenceKey,restoreExperience,resetQuestionnaire} from '../public/experience-state.mjs';
+import {freshExperience,loadSavedExperience,mainStateKey,mainPreferenceKey,restoreExperience,resetQuestionnaire,currentSwipePicks} from '../public/experience-state.mjs';
 import {questions} from '../public/questions.mjs';
 const store=records=>({getItem:key=>records[key]===undefined?null:typeof records[key]==='string'?records[key]:JSON.stringify(records[key])});
 const complete=changes=>({...freshExperience(),completed:true,answered:questions.map(q=>q.id),...changes});
@@ -40,4 +40,26 @@ test('resetting answers preserves saved dogs and persists without re-importing o
  assert.deepEqual(reset.favorites,original.favorites);assert.deepEqual(reset.compare,original.compare);assert.equal(reset.topPick,original.topPick);assert.notEqual(reset.favorites,original.favorites);assert.equal(JSON.stringify(original),before);
  const restored=loadSavedExperience(store({[mainStateKey]:reset,'pawfect-prototype-v2':original,[mainPreferenceKey]:{size:130,motion:true,theme:'dark'}}));
  assert.equal(restored.source,'main');assert.deepEqual(restored.state.answered,[]);assert.deepEqual(restored.state.favorites,original.favorites);assert.equal(restored.state.completed,false);assert.deepEqual(restored.preferences,{size:130,motion:true,theme:'dark'});
+});
+
+
+test('final dogs include only explicitly liked and still-saved dogs from this swipe session',()=>{
+ const state=complete({favorites:['saint-bernard','cavalier','maltese'],history:[{id:'cavalier',choice:'like',wasSaved:false},{id:'saint-bernard',choice:'pass',wasSaved:true}]});
+ const before=JSON.stringify(state);
+ assert.deepEqual(currentSwipePicks(state),['cavalier']);
+ assert.equal(JSON.stringify(state),before);
+});
+
+test('unseen older favorites and an old top pick cannot become final swipe picks',()=>{
+ const state=complete({favorites:['saint-bernard'],topPick:'saint-bernard',history:[]});
+ assert.deepEqual(currentSwipePicks(state),[]);
+ assert.deepEqual(state.favorites,['saint-bernard']);
+});
+
+test('undo and removing a favorite remove its final card even if an older favorite is restored',()=>{
+ const state=complete({favorites:['cavalier'],history:[{id:'cavalier',choice:'like',wasSaved:true}]});
+ assert.deepEqual(currentSwipePicks(state),['cavalier']);
+ assert.deepEqual(currentSwipePicks({...state,history:[]}),[]);
+ assert.deepEqual(currentSwipePicks({...state,favorites:[]}),[]);
+ assert.deepEqual(currentSwipePicks(resetQuestionnaire(state)),[]);
 });

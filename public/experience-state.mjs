@@ -20,6 +20,12 @@ export function restoreExperience(raw,{legacy=false}={}){
  return {...restored,answered,question,completed:restored.completed&&active.every(q=>answered.includes(q.id)),topPick:knownIds.has(raw.topPick)?raw.topPick:null};
 }
 
+// A final swipe result contains explicit likes from this session, not older saved dogs.
+export function currentSwipePicks(state){
+ const saved=new Set(state.favorites);
+ return [...new Set(state.history.filter(item=>item.choice==='like'&&saved.has(item.id)&&knownIds.has(item.id)).map(item=>item.id))];
+}
+
 export function normalizePreferences(raw={}){
  return {size:Math.max(85,Math.min(150,Number(raw?.size)||100)),motion:raw?.motion===true,theme:raw?.theme==='dark'?'dark':'light'};
 }
