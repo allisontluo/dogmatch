@@ -1,6 +1,6 @@
 import {reorderCompared} from './comparison-tools.mjs';
 import {dogProfiles} from './profiles.mjs?v=22';
-import {breeds,defaults,normalizeProfile,needsCarePlan,rankBreeds,restoreState,discoveryRound as discoveryQueue,fluffLevels,matchesCoat} from './engine.mjs?v=22';
+import {breeds,defaults,normalizeProfile,needsCarePlan,rankBreeds,restoreState,discoveryRound as discoveryQueue,fluffLevels,matchesCoat} from './engine.mjs?v=23';
 const $=id=>document.getElementById(id);
 const key='uxdesign-pawfect-match-v1';
 let state={version:1,profile:{...defaults},step:0,completed:false,favorites:[],compare:[],history:[]};
@@ -36,7 +36,7 @@ function render(){$('browse-label').textContent=`Browse (${breeds.length} dog ty
  $('discover-locked').hidden=state.completed;
  $('results-placeholder').hidden=state.completed;$('results-content').hidden=!state.completed;
  $('results-subtitle').textContent=state.completed?'The dogs you’ve saved.':'Finish the quiz to reveal your personalized matches.';
- $('care-message').hidden=!needsCarePlan(p);$('care-message').textContent='Care plan needed: more than 5 hours away without support. Match scores stay at 55 or below until you add a plan.';
+ $('care-message').hidden=!needsCarePlan(p);$('care-message').textContent='Your dog needs someone to check in: more than 5 hours away with no one available yet. Having someone look after your dog improves this part of your match.';
  const query=$('breed-search').value.toLowerCase().replace(/[^a-z0-9]/g,'');
  const visible=ranked.filter(x=>(!$('only-saved').checked||state.favorites.includes(x.breed.id))&&`${x.breed.name} ${dogProfiles[x.breed.id].name}`.toLowerCase().replace(/[^a-z0-9]/g,'').includes(query));
  $('catalog-count').textContent=`${visible.length} of ${breeds.length} dog types`;

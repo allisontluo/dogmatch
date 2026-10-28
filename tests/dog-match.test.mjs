@@ -14,10 +14,18 @@ test('exercise and coat choices change relative matches',()=>{
  const coats=rankBreeds({...defaults,grooming:3,shedding:'low',priority:'coat'});
  assert(coats.find(x=>x.breed.id==='poodle').score>rankBreeds(defaults).find(x=>x.breed.id==='poodle').score);
 });
-test('long unsupervised days cap all results; care support clears the cap',()=>{
- assert(rankBreeds({...defaults,alone:9}).every(x=>x.score<=55));
- assert.equal(rankBreeds({...defaults,alone:9})[0].breed.id,rankBreeds(defaults)[0].breed.id);
- assert(rankBreeds({...defaults,alone:9,support:'yes'})[0].score>55);
+test('a missing care plan lowers weighted scores without flattening different profiles to 55',()=>{
+ const missing=rankBreeds({...defaults,alone:9,support:'none'});
+ const supported=rankBreeds({...defaults,alone:9,support:'yes'});
+ assert(new Set(missing.map(row=>row.score)).size>5);
+ assert(missing[0].score>55);
+ for(const row of missing){
+  assert.equal(row.fit.care,0);
+  const withPlan=supported.find(other=>other.breed.id===row.breed.id);
+  assert.equal(withPlan.fit.care,100);
+  assert(withPlan.score>row.score);
+ }
+ assert.deepEqual(missing.map(row=>row.breed.id),rankBreeds(defaults).map(row=>row.breed.id));
  // A hidden prior care selection must not affect ordinary short days.
  assert.deepEqual(rankBreeds({...defaults,alone:4,support:'yes'}),rankBreeds(defaults));
 });

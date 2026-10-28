@@ -32,12 +32,14 @@ export function scoreBreed(b,raw) {
  const fit={activity:Math.min(100,p.exercise/b.exercise*100),training:Math.min(100,p.training/b.training*100),space:p.home==='house'||b.space===1?100:65,size:p.size==='any'||p.size===b.size?100:30,grooming:Math.min(100,p.grooming/b.grooming*100),shedding:p.shedding==='any'?100:(4-b.shedding)/3*100,experience:p.experience==='experienced'||b.experience===1?100:45};
  const t=householdTraits[b.id];
  fit.coat=matchesCoat(b,p)?100:0;
+ fit.care=needsCarePlan(p)?0:100;
  fit.children=p.children==='none'?100:p.children==='older'?(t.children===1?65:100):t.children/3*100;
  fit.pets=p.pets==='none'?100:p.pets==='dogs'?t.dogs/3*100:Math.max(0,100-(t.prey-1)*(p.pets==='small'?40:30));
  fit.barking=p.barking==='any'?100:(4-t.bark)/3*100;
  fit.social=p.social==='any'?100:t.social/3*100;
  fit.drool=p.drool==='any'?100:(4-t.drool)/3*100;
  const weights={activity:25,training:15,space:10,size:15,grooming:15,shedding:10,experience:10};
+ if(p.alone>5)weights.care=20;
  if(p.fluff!=='any')weights.coat=30;
  if(p.children!=='none')weights.children=15;
  if(p.pets!=='none')weights.pets=15;
@@ -48,7 +50,7 @@ export function scoreBreed(b,raw) {
  if(p.priority==='coat'){weights.grooming*=2;weights.shedding*=2;}
  if(p.priority==='size')weights.size*=2;
  const weighted=Object.entries(weights).reduce((sum,[k,w])=>sum+w*fit[k],0)/Object.values(weights).reduce((a,b)=>a+b,0);
- return {breed:b,score:Math.min(needsCarePlan(p)?55:100,Math.round(weighted)),fit,uncappedScore:weighted};
+ return {breed:b,score:Math.round(weighted),fit,uncappedScore:weighted};
 }
 export function rankBreeds(p){return breeds.map(b=>scoreBreed(b,p)).sort((a,b)=>b.score-a.score||b.uncappedScore-a.uncappedScore||a.breed.name.localeCompare(b.breed.name));}
 export function restoreState(raw) {
