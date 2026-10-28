@@ -1,7 +1,7 @@
 import {breeds,defaults,normalizeProfile,rankBreeds,restoreState,discoveryRound,matchesCoat,needsCarePlan,fluffLevels} from '../engine.mjs?v=23';
 import {dogProfiles} from '../profiles.mjs?v=22';
 import {reorderCompared} from '../comparison-tools.mjs';
-import {chapters,questions,activeQuestions,duration,answerText} from './questions.mjs?v=2';
+import {chapters,questions,activeQuestions,duration,answerText} from './questions.mjs?v=3';
 const $=id=>document.getElementById(id),screen=$('screen'),storageKey='pawfect-prototype-v2',preferenceKey='pawfect-prototype-v2-preferences';
 const ids=new Set(breeds.map(b=>b.id));
 const paw='<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="6" cy="8" rx="2.2" ry="3" fill="currentColor"/><ellipse cx="11" cy="5" rx="2" ry="2.7" fill="currentColor"/><ellipse cx="17" cy="6" rx="2" ry="2.8" fill="currentColor"/><ellipse cx="21" cy="11" rx="1.8" ry="2.5" fill="currentColor"/><path d="M6 17c0-3 3-7 6-7s7 4 7 7c0 4-4 2-6 2s-7 2-7-2" fill="currentColor"/></svg>';

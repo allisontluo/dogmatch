@@ -1,5 +1,5 @@
 import {normalizeProfile,needsCarePlan} from './engine.mjs?v=23';
-import {duration} from './questions.mjs?v=2';
+import {duration} from './questions.mjs?v=3';
 
 const training=['','short daily practice','regular daily training','lots of training and mental work'];
 const grooming=['','basic coat care','regular brushing','brushing and professional grooming'];
