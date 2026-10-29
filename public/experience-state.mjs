@@ -1,5 +1,5 @@
-import {breeds,defaults,restoreState} from './engine.mjs?v=23';
-import {questions,activeQuestions} from './questions.mjs?v=3';
+import {breeds,defaults,restoreState} from './engine.mjs?v=24';
+import {questions,activeQuestions} from './questions.mjs?v=4';
 
 export const mainStateKey='pawfect-match-v2';
 export const mainPreferenceKey='pawfect-match-v2-preferences';
@@ -16,7 +16,8 @@ export function restoreExperience(raw,{legacy=false}={}){
  const restored=restoreState(raw);
  const answered=[...new Set((Array.isArray(raw.answered)?raw.answered:legacy?Object.keys(raw.profile||{}):[]).filter(id=>questionIds.has(id)))];
  const active=activeQuestions(restored.profile,answered);
- const question=active.some(q=>q.id===raw.question)?raw.question:(active.find(q=>q.chapter===restored.step&&!answered.includes(q.id))||active.find(q=>!answered.includes(q.id))||active[0]).id;
+ const savedQuestion=raw.question==='support'?'training':raw.question;
+ const question=active.some(q=>q.id===savedQuestion)?savedQuestion:(active.find(q=>q.chapter===restored.step&&!answered.includes(q.id))||active.find(q=>!answered.includes(q.id))||active[0]).id;
  return {...restored,answered,question,completed:restored.completed&&active.every(q=>answered.includes(q.id)),topPick:knownIds.has(raw.topPick)?raw.topPick:null};
 }
 

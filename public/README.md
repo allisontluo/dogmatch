@@ -15,7 +15,7 @@ Open http://localhost:8094/. Use HTTP for native JavaScript modules. There is no
 
 - Original fullscreen dog-collage welcome with Start matching.
 - One question at a time, four clickable chapters, no preselected answers, and a review screen for direct editing.
-- Activity (0–4 hours) and hours away sliders, readable hours/minutes, training and care-while-away dropdowns. Care support appears after an answer above five hours away.
+- Activity (0–4 hours) and hours away sliders, readable hours/minutes, a training dropdown.
 - Recommended, Favorites and the complete 52-type Browse catalog with immediate name/type search. Your dogs opens saved favorites first when any are present. Match scores appear after finishing the questionnaire.
 - **Swipe dogs:** drag the photo right to like/save or left to pass, with directional feedback. Like/Pass buttons, arrow keys, Undo and new rounds remain available. Rounds contain up to ten adaptive choices; restarting keeps favorites. A button beside the dog library links directly to swiping.
 - **Final dogs:** after ten swipes, all liked dogs appear on their own screen with comparison checkboxes and top-pick buttons. The screen is also available from the menu or See my final dogs while swiping. Undo last swipe can reopen the last decision.
@@ -50,6 +50,6 @@ Taste direction: Editorial greeting, seed 2035120197, no new draw. This promotes
 
 ## Matching model
 
-Scores are authored teaching estimates of dog-type fit, not adoption listings, AKC ratings or individual suitability guarantees. Base weights are activity 25, training 15, space 10, size 15, grooming 15, shedding 10 and experience 10. Coat and selected household preferences add weights; the chosen priority doubles relevant base weights. For days longer than five hours, care support contributes weight 20 (100 with support, 0 without). Missing support lowers the weighted fit instead of flattening results at 55. Labels and concrete activity, training, coat-care, and preference gaps explain each result. Discovery combines overall fit (85%) with learned similarity (15%).
+Scores are authored teaching estimates of dog-type fit, not adoption listings, AKC ratings or individual suitability guarantees. Base weights are activity 25, training 15, space 10, size 15, grooming 15, shedding 10 and experience 10. Coat and selected household preferences add weights; the chosen priority doubles relevant base weights. Labels and concrete activity, training, coat-care, and preference gaps explain each result. Discovery combines overall fit (85%) with learned similarity (15%).
 
 Winnie, Monty, Mit and Link include owner-confirmed details, with unknown fields left unknown. Other identities are existing examples. The website distinguishes these from verified adoption listings. No new dog facts, photos or third-party dependencies were added during the transfer.

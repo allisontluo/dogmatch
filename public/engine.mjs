@@ -15,8 +15,8 @@ const originalBreeds = [
  {"id": "terrier", "name": "Jack Russell Terrier", "size": "small", "exercise": 90, "training": 3, "grooming": 1, "shedding": 2, "space": 1, "experience": 2, "coatLabel": "Short or rough coat", "description": "A small, lively working terrier with plenty of energy and a strong interest in exploring.", "watch": "Small does not mean low energy. Plan for enrichment, training, secure exercise, and prey-drive management.", "url": "https://vcahospitals.com/know-your-pet/jack-russell-terrier"}
 ];
 export const breeds = [...originalBreeds,...extendedBreeds];
-export const defaults = {home:'apartment',size:'any',experience:'new',exercise:60,alone:4,support:'none',training:2,grooming:1,shedding:'any',priority:'balanced',fluff:'any',children:'none',pets:'none',barking:'any',social:'any',drool:'any'};
-const choices={children:['none','older','young'],pets:['none','dogs','cats','small'],barking:['any','quiet'],social:['any','visitors'],drool:['any','low'],fluff:['any','fluffy','sleek'],home:['apartment','house'],size:['any','small','medium','large'],experience:['new','experienced'],support:['none','yes'],shedding:['any','low'],priority:['balanced','activity','coat','size']};
+export const defaults = {home:'apartment',size:'any',experience:'new',exercise:60,alone:4,training:2,grooming:1,shedding:'any',priority:'balanced',fluff:'any',children:'none',pets:'none',barking:'any',social:'any',drool:'any'};
+const choices={children:['none','older','young'],pets:['none','dogs','cats','small'],barking:['any','quiet'],social:['any','visitors'],drool:['any','low'],fluff:['any','fluffy','sleek'],home:['apartment','house'],size:['any','small','medium','large'],experience:['new','experienced'],shedding:['any','low'],priority:['balanced','activity','coat','size']};
 export function normalizeProfile(raw={}) {
  if(!raw || typeof raw!=="object") raw={};
  const p={...defaults};
@@ -26,20 +26,17 @@ export function normalizeProfile(raw={}) {
  }
  return p;
 }
-export function needsCarePlan(p){return p.alone>5&&p.support!=='yes';}
 export function scoreBreed(b,raw) {
  const p=normalizeProfile(raw);
  const fit={activity:Math.min(100,p.exercise/b.exercise*100),training:Math.min(100,p.training/b.training*100),space:p.home==='house'||b.space===1?100:65,size:p.size==='any'||p.size===b.size?100:30,grooming:Math.min(100,p.grooming/b.grooming*100),shedding:p.shedding==='any'?100:(4-b.shedding)/3*100,experience:p.experience==='experienced'||b.experience===1?100:45};
  const t=householdTraits[b.id];
  fit.coat=matchesCoat(b,p)?100:0;
- fit.care=needsCarePlan(p)?0:100;
  fit.children=p.children==='none'?100:p.children==='older'?(t.children===1?65:100):t.children/3*100;
  fit.pets=p.pets==='none'?100:p.pets==='dogs'?t.dogs/3*100:Math.max(0,100-(t.prey-1)*(p.pets==='small'?40:30));
  fit.barking=p.barking==='any'?100:(4-t.bark)/3*100;
  fit.social=p.social==='any'?100:t.social/3*100;
  fit.drool=p.drool==='any'?100:(4-t.drool)/3*100;
  const weights={activity:25,training:15,space:10,size:15,grooming:15,shedding:10,experience:10};
- if(p.alone>5)weights.care=20;
  if(p.fluff!=='any')weights.coat=30;
  if(p.children!=='none')weights.children=15;
  if(p.pets!=='none')weights.pets=15;

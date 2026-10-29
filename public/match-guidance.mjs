@@ -1,5 +1,5 @@
-import {normalizeProfile,needsCarePlan} from './engine.mjs?v=23';
-import {duration} from './questions.mjs?v=3';
+import {normalizeProfile} from './engine.mjs?v=24';
+import {duration} from './questions.mjs?v=4';
 
 const training=['','short daily practice','regular daily training','lots of training and mental work'];
 const grooming=['','basic coat care','regular brushing','brushing and professional grooming'];
@@ -22,8 +22,8 @@ export function explainMatch(row,raw){
  if(p.social==='visitors')check('social','Visitors: matches your preference for an outgoing dog.','Visitors: below your preference for an outgoing dog.');
  if(p.drool==='low')check('drool','Drool: fits your lower-drool preference.','Drool: more than your lower-drool preference.');
  concerns.sort((a,b)=>a.fit-b.fit);
- const carePlanNeeded=needsCarePlan(p),majorGap=f.activity<50||f.training<50;
- const level=row.score<70||majorGap?'changes':row.score>=85&&!carePlanNeeded&&!concerns.length?'strong':'tradeoffs';
+ const majorGap=f.activity<50||f.training<50;
+ const level=row.score<70||majorGap?'changes':row.score>=85&&!concerns.length?'strong':'tradeoffs';
  const label={strong:'Strong profile fit',tradeoffs:'Good fit with trade-offs',changes:'Needs changes to fit'}[level];
- return {level,label,carePlanNeeded,strengths,concerns:concerns.map(c=>c.text),reasons:concerns.length?concerns.slice(0,2).map(c=>c.text):strengths.slice(0,2)};
+ return {level,label,strengths,concerns:concerns.map(c=>c.text),reasons:concerns.length?concerns.slice(0,2).map(c=>c.text):strengths.slice(0,2)};
 }

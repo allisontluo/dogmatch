@@ -33,6 +33,21 @@ test('corrupt storage falls back safely and blocked storage stays usable for the
  const loaded=loadSavedExperience({getItem(){throw new Error('blocked');}});assert.equal(loaded.storageOK,false);assert.deepEqual(loaded.state.answered,[]);
 });
 
+test('removing the care question preserves saved answers, completion and dogs',()=>{
+ const old=complete({profile:{...freshExperience().profile,alone:9,support:'none'},answered:[...questions.map(q=>q.id),'support'],question:'support',favorites:['aussiedoodle'],compare:['aussiedoodle'],topPick:'aussiedoodle',history:[{id:'aussiedoodle',choice:'like',wasSaved:false}]});
+ const restored=loadSavedExperience(store({[mainStateKey]:old})).state;
+ assert.equal(restored.completed,true);
+ assert.equal(restored.answered.length,15);
+ assert(!restored.answered.includes('support'));
+ assert(!('support' in restored.profile));
+ assert.equal(restored.profile.alone,9);
+ assert.equal(restored.question,'training');
+ assert.deepEqual(restored.favorites,old.favorites);
+ assert.deepEqual(restored.compare,old.compare);
+ assert.equal(restored.topPick,old.topPick);
+ assert.deepEqual(restored.history,old.history);
+});
+
 test('resetting answers preserves saved dogs and persists without re-importing old answers',()=>{
  const original=complete({profile:{...freshExperience().profile,exercise:180,alone:8,support:'yes'},favorites:['aussiedoodle','goldendoodle'],compare:['goldendoodle','aussiedoodle'],topPick:'aussiedoodle',question:'drool',step:3,history:[{id:'golden',choice:'pass',wasSaved:false}]});
  const before=JSON.stringify(original),reset=resetQuestionnaire(original);

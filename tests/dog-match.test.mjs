@@ -14,20 +14,13 @@ test('exercise and coat choices change relative matches',()=>{
  const coats=rankBreeds({...defaults,grooming:3,shedding:'low',priority:'coat'});
  assert(coats.find(x=>x.breed.id==='poodle').score>rankBreeds(defaults).find(x=>x.breed.id==='poodle').score);
 });
-test('a missing care plan lowers weighted scores without flattening different profiles to 55',()=>{
- const missing=rankBreeds({...defaults,alone:9,support:'none'});
- const supported=rankBreeds({...defaults,alone:9,support:'yes'});
- assert(new Set(missing.map(row=>row.score)).size>5);
- assert(missing[0].score>55);
- for(const row of missing){
-  assert.equal(row.fit.care,0);
-  const withPlan=supported.find(other=>other.breed.id===row.breed.id);
-  assert.equal(withPlan.fit.care,100);
-  assert(withPlan.score>row.score);
+test('removed care answers cannot lower or cap matches saved by earlier versions',()=>{
+ const baseline=rankBreeds(defaults);
+ assert(new Set(baseline.map(row=>row.score)).size>5);
+ assert(baseline[0].score>55);
+ for(const alone of [4,9,24])for(const support of ['none','yes',undefined]){
+  assert.deepEqual(rankBreeds({...defaults,alone,support}),baseline);
  }
- assert.deepEqual(missing.map(row=>row.breed.id),rankBreeds(defaults).map(row=>row.breed.id));
- // A hidden prior care selection must not affect ordinary short days.
- assert.deepEqual(rankBreeds({...defaults,alone:4,support:'yes'}),rankBreeds(defaults));
 });
 test('corrupt persisted lists and numerical values cannot break charts or scores',()=>{
  const state=restoreState({version:1,profile:{exercise:'NaN',grooming:500,size:'invalid'},favorites:['bogus','poodle','poodle'],compare:['bogus',...breeds.map(x=>x.id)]});

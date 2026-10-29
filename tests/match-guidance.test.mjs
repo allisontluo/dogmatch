@@ -12,12 +12,11 @@ test('advice states concrete activity and training gaps instead of generic posit
  assert(!advice.reasons.some(text=>text.includes('your plan covers')));
 });
 
-test('strong labels require the profile needs to fit and a resolved care plan',()=>{
+test('strong labels require the profile needs to fit and ignore removed care answers',()=>{
  const p={...defaults,home:'house',size:'any',exercise:240,training:3,grooming:3,experience:'experienced'};
  assert.equal(explainMatch(row('havanese',p),p).level,'strong');
  const away={...p,alone:9,support:'none'};
- assert.equal(explainMatch(row('havanese',away),away).carePlanNeeded,true);
- assert.notEqual(explainMatch(row('havanese',away),away).level,'strong');
+ assert.equal(explainMatch(row('havanese',away),away).level,'strong');
  assert.equal(explainMatch(row('havanese',{...away,support:'yes'}),{...away,support:'yes'}).level,'strong');
 });
 
@@ -27,7 +26,6 @@ test('all catalog profiles have useful, consistent explanations for selected pre
   const advice=explainMatch(result,p);
   assert(advice.reasons.length>0&&advice.reasons.length<=2);
   assert(advice.label.length>0);
-  assert.equal(advice.carePlanNeeded,true);
   if(result.fit.activity<50||result.fit.training<50)assert.equal(advice.level,'changes');
  }
 });
